@@ -11,12 +11,11 @@ function App() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [pairingCount, setPairingCount] = useState(0);
 
   const [favorites, setFavorites] = useState(() => {
     try {
-      const savedFavorites = localStorage.getItem("dinesync-favorites");
-      return savedFavorites ? JSON.parse(savedFavorites) : [];
+      const saved = localStorage.getItem("dinesync-favorites");
+      return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
     }
@@ -78,10 +77,8 @@ function App() {
 
       setRestaurant(randomRestaurant);
       setMovie(randomMovie);
-      setPairingCount((count) => count + 1);
     } catch (error) {
       console.error(error);
-
       setError(
         error.message ||
           "We couldn't build your pairing. Please try again."
@@ -92,9 +89,7 @@ function App() {
   }
 
   function savePairing() {
-    if (!restaurant || !movie) {
-      return;
-    }
+    if (!restaurant || !movie) return;
 
     const newFavorite = {
       id: `${restaurant.id}-${movie.id}-${Date.now()}`,
@@ -102,21 +97,20 @@ function App() {
       restaurantRating: restaurant.rating,
       restaurantURL: restaurant.url,
       restaurantImage: restaurant.image_url,
+      restaurantLocation:
+        restaurant.location?.city || location,
       movieTitle: movie.title,
       movieRating: movie.vote_average,
       moviePoster: movie.poster_path,
       movieId: movie.id
     };
 
-    setFavorites((currentFavorites) => [
-      newFavorite,
-      ...currentFavorites
-    ]);
+    setFavorites((current) => [newFavorite, ...current]);
   }
 
   function removeFavorite(id) {
-    setFavorites((currentFavorites) =>
-      currentFavorites.filter((favorite) => favorite.id !== id)
+    setFavorites((current) =>
+      current.filter((favorite) => favorite.id !== id)
     );
   }
 
@@ -138,222 +132,226 @@ function App() {
     <div className="app">
       <header className="hero">
         <nav className="navbar">
-          <div className="logo">DineSync</div>
-          <span>Code2College JavaScript Project</span>
+          <div className="brand">
+            <div className="logo">DineSync</div>
+            <span>DINNER MEETS CINEMA</span>
+          </div>
+
+          <p className="nav-message">
+            ✦ A PERFECT PAIRING, EVERY TIME.
+          </p>
         </nav>
 
         <div className="hero-content">
-          <p className="eyebrow">DINNER MEETS CINEMA</p>
+          <p className="eyebrow">GOOD FOOD. GREAT STORIES.</p>
 
-          <h1>
-            Your night,
-            <br />
-            perfectly paired.
-          </h1>
+          <h1>Your night, perfectly paired.</h1>
 
           <p className="tagline">
-            Stop debating where to eat and what to watch. Tell
-            DineSync where you are, choose your preferences, and
-            discover your next dinner and movie combination.
+            Discover restaurants and movies based on your location and
+            taste. DineSync creates the combination for you.
           </p>
 
-          <div className="location-field">
-            <label htmlFor="location">WHERE ARE YOU DINING?</label>
+          <div className="controls">
+            <div className="control-group location-control">
+              <label htmlFor="location">
+                WHERE ARE YOU DINING?
+              </label>
 
-            <input
-              id="location"
-              type="text"
-              value={location}
-              placeholder="Austin, TX"
-              onChange={(event) => setLocation(event.target.value)}
-              onKeyDown={handleLocationKeyDown}
-            />
+              <input
+                id="location"
+                type="text"
+                value={location}
+                placeholder="Austin, TX"
+                onChange={(event) =>
+                  setLocation(event.target.value)
+                }
+                onKeyDown={handleLocationKeyDown}
+              />
+            </div>
+
+            <div className="control-group">
+              <label htmlFor="cuisine">CUISINE</label>
+
+              <select
+                id="cuisine"
+                value={cuisine}
+                onChange={(event) =>
+                  setCuisine(event.target.value)
+                }
+              >
+                <option value="">Any Cuisine</option>
+                <option value="Italian">Italian</option>
+                <option value="Mexican">Mexican</option>
+                <option value="Indian">Indian</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Mediterranean">
+                  Mediterranean
+                </option>
+                <option value="Thai">Thai</option>
+                <option value="Korean">Korean</option>
+                <option value="American">American</option>
+              </select>
+            </div>
+
+            <div className="control-group">
+              <label htmlFor="genre">MOVIE GENRE</label>
+
+              <select
+                id="genre"
+                value={genre}
+                onChange={(event) =>
+                  setGenre(event.target.value)
+                }
+              >
+                <option value="">Any Genre</option>
+                <option value="28">Action</option>
+                <option value="12">Adventure</option>
+                <option value="16">Animation</option>
+                <option value="35">Comedy</option>
+                <option value="80">Crime</option>
+                <option value="18">Drama</option>
+                <option value="14">Fantasy</option>
+                <option value="27">Horror</option>
+                <option value="9648">Mystery</option>
+                <option value="10749">Romance</option>
+                <option value="878">Science Fiction</option>
+                <option value="53">Thriller</option>
+              </select>
+            </div>
           </div>
 
-          <div className="filters">
-            <select
-              value={cuisine}
-              onChange={(event) => setCuisine(event.target.value)}
-              aria-label="Choose cuisine"
-            >
-              <option value="">Any Cuisine</option>
-              <option value="Italian">Italian</option>
-              <option value="Mexican">Mexican</option>
-              <option value="Indian">Indian</option>
-              <option value="Japanese">Japanese</option>
-              <option value="Chinese">Chinese</option>
-              <option value="Mediterranean">Mediterranean</option>
-              <option value="Thai">Thai</option>
-              <option value="Korean">Korean</option>
-              <option value="American">American</option>
-            </select>
-
-            <select
-              value={genre}
-              onChange={(event) => setGenre(event.target.value)}
-              aria-label="Choose movie genre"
-            >
-              <option value="">Any Genre</option>
-              <option value="28">Action</option>
-              <option value="12">Adventure</option>
-              <option value="16">Animation</option>
-              <option value="35">Comedy</option>
-              <option value="80">Crime</option>
-              <option value="18">Drama</option>
-              <option value="14">Fantasy</option>
-              <option value="27">Horror</option>
-              <option value="9648">Mystery</option>
-              <option value="10749">Romance</option>
-              <option value="878">Science Fiction</option>
-              <option value="53">Thriller</option>
-            </select>
-
-            <button
-              className="primary-button"
-              onClick={generatePairing}
-              disabled={loading}
-            >
-              {loading ? "Finding Your Night..." : "✦ Find My Night"}
-            </button>
-          </div>
+          <button
+            className="primary-button"
+            onClick={generatePairing}
+            disabled={loading}
+          >
+            {loading ? "Finding Your Night..." : "✦ Find My Night"}
+          </button>
         </div>
       </header>
 
-      <main>
-        <section className="pairing-section">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow dark">TONIGHT'S PAIRING</p>
-              <h2>Dinner + Movie</h2>
-            </div>
+      <main className="main-content">
+        {error && <p className="error-message">{error}</p>}
 
-            {pairingCount > 0 && (
-              <span className="pairing-count">
-                {pairingCount}{" "}
-                {pairingCount === 1 ? "pairing" : "pairings"} explored
-              </span>
-            )}
-          </div>
-
-          {error && <p className="error-message">{error}</p>}
-
-          <div className="pairing-grid">
-            <article className="recommendation-card">
-              <div className="card-top">
-                <span className="card-type">DINNER</span>
-                <span className="card-icon">🍽️</span>
-              </div>
-
+        <section className="results-section">
+          <div className="result-grid">
+            <article className="result-card">
               {restaurant ? (
                 <>
                   {restaurant.image_url && (
                     <img
-                      className="card-image"
+                      className="restaurant-image"
                       src={restaurant.image_url}
                       alt={restaurant.name}
                     />
                   )}
 
-                  <h3>{restaurant.name}</h3>
+                  <div className="result-info">
+                    <p className="result-label">RESTAURANT</p>
 
-                  <p className="category">
-                    {restaurant.categories
-                      ?.map((item) => item.title)
-                      .join(" • ")}
-                  </p>
+                    <h2>{restaurant.name}</h2>
 
-                  <div className="details">
-                    <span>★ {restaurant.rating}</span>
+                    <div className="rating-row">
+                      <strong>★ {restaurant.rating}</strong>
 
-                    {restaurant.price && (
-                      <span>{restaurant.price}</span>
+                      {restaurant.price && (
+                        <span>{restaurant.price}</span>
+                      )}
+                    </div>
+
+                    <p className="result-meta">
+                      {restaurant.categories
+                        ?.map((category) => category.title)
+                        .join(" · ")}
+                    </p>
+
+                    {restaurant.location && (
+                      <p className="result-meta">
+                        {restaurant.location.display_address?.join(
+                          ", "
+                        )}
+                      </p>
                     )}
 
-                    {restaurant.location?.city && (
-                      <span>
-                        {restaurant.location.city}
-                        {restaurant.location.state
-                          ? `, ${restaurant.location.state}`
-                          : ""}
-                      </span>
+                    {restaurant.url && (
+                      <a
+                        className="outline-button"
+                        href={restaurant.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View on Yelp ↗
+                      </a>
                     )}
                   </div>
-
-                  {restaurant.url && (
-                    <a
-                      className="card-link"
-                      href={restaurant.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      View on Yelp ↗
-                    </a>
-                  )}
                 </>
               ) : (
-                <div className="empty-card">
-                  <span>01</span>
-                  <h3>Waiting for your pick.</h3>
+                <div className="empty-result">
+                  <p className="result-label">RESTAURANT</p>
+                  <h2>Your dinner will appear here.</h2>
                   <p>
-                    Enter your location and let DineSync find your
-                    dinner.
+                    Choose your preferences and discover somewhere
+                    new.
                   </p>
                 </div>
               )}
             </article>
 
-            <div className="pair-symbol">+</div>
+            <div className="plus">+</div>
 
-            <article className="recommendation-card">
-              <div className="card-top">
-                <span className="card-type">MOVIE</span>
-                <span className="card-icon">🎬</span>
-              </div>
-
+            <article className="result-card">
               {movie ? (
                 <>
                   {moviePoster && (
                     <img
-                      className="card-image poster"
+                      className="movie-image"
                       src={moviePoster}
                       alt={`${movie.title} poster`}
                     />
                   )}
 
-                  <h3>{movie.title}</h3>
+                  <div className="result-info">
+                    <p className="result-label">MOVIE</p>
 
-                  <p className="category">
-                    {movie.release_date
-                      ? movie.release_date.substring(0, 4)
-                      : "Release year unavailable"}
-                  </p>
+                    <h2>{movie.title}</h2>
 
-                  <div className="details">
-                    <span>
-                      ★{" "}
-                      {typeof movie.vote_average === "number"
-                        ? movie.vote_average.toFixed(1)
-                        : "N/A"}
-                    </span>
+                    <div className="rating-row">
+                      <strong>
+                        ★{" "}
+                        {typeof movie.vote_average === "number"
+                          ? movie.vote_average.toFixed(1)
+                          : "N/A"}
+                      </strong>
+
+                      {movie.release_date && (
+                        <span>
+                          {movie.release_date.substring(0, 4)}
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="movie-overview">
+                      {movie.overview}
+                    </p>
+
+                    <a
+                      className="outline-button"
+                      href={`https://www.themoviedb.org/movie/${movie.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View on TMDB ↗
+                    </a>
                   </div>
-
-                  <p className="movie-overview">{movie.overview}</p>
-
-                  <a
-                    className="card-link"
-                    href={`https://www.themoviedb.org/movie/${movie.id}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View on TMDB ↗
-                  </a>
                 </>
               ) : (
-                <div className="empty-card">
-                  <span>02</span>
-                  <h3>Waiting for your pick.</h3>
+                <div className="empty-result">
+                  <p className="result-label">MOVIE</p>
+                  <h2>Your movie will appear here.</h2>
                   <p>
-                    Choose a genre or let DineSync surprise you.
+                    Pick a genre or leave it open for a surprise.
                   </p>
                 </div>
               )}
@@ -361,20 +359,20 @@ function App() {
           </div>
 
           {restaurant && movie && (
-            <div className="pairing-actions">
+            <div className="result-actions">
               <button
-                className="secondary-button"
-                onClick={savePairing}
-              >
-                ♡ Save This Pairing
-              </button>
-
-              <button
-                className="text-button"
+                className="try-button"
                 onClick={generatePairing}
                 disabled={loading}
               >
                 Try Another ↻
+              </button>
+
+              <button
+                className="save-button"
+                onClick={savePairing}
+              >
+                ♡ Save This Pairing
               </button>
             </div>
           )}
@@ -383,8 +381,12 @@ function App() {
         <section className="favorites-section">
           <div className="favorites-heading">
             <div>
-              <p className="eyebrow dark">YOUR COLLECTION</p>
+              <p className="result-label">YOUR COLLECTION</p>
               <h2>Saved Nights</h2>
+              <p>
+                Your favorite dinner and movie pairings, all in one
+                place.
+              </p>
             </div>
 
             {favorites.length > 0 && (
@@ -402,118 +404,78 @@ function App() {
               <span>♡</span>
               <h3>No saved nights yet.</h3>
               <p>
-                When you find a pairing you love, save it here for
-                later.
+                Save a pairing you love and it will appear here.
               </p>
             </div>
           ) : (
             <div className="favorites-grid">
-              {favorites.map((favorite) => (
-                <article
-                  className="favorite-card"
-                  key={favorite.id}
-                >
-                  <div className="favorite-number">
-                    SAVED PAIRING
-                  </div>
+              {favorites.map((favorite) => {
+                const favoritePoster = favorite.moviePoster
+                  ? `https://image.tmdb.org/t/p/w200${favorite.moviePoster}`
+                  : null;
 
-                  <div className="favorite-pair">
-                    <div>
-                      <span>DINNER</span>
+                return (
+                  <article
+                    className="favorite-card"
+                    key={favorite.id}
+                  >
+                    <div className="favorite-images">
+                      {favorite.restaurantImage && (
+                        <img
+                          src={favorite.restaurantImage}
+                          alt=""
+                        />
+                      )}
+
+                      {favoritePoster && (
+                        <img
+                          src={favoritePoster}
+                          alt=""
+                        />
+                      )}
+                    </div>
+
+                    <div className="favorite-info">
+                      <span>DINNER + MOVIE</span>
                       <h3>{favorite.restaurantName}</h3>
-                      <p>★ {favorite.restaurantRating}</p>
+                      <p>{favorite.movieTitle}</p>
+                      <small>
+                        {favorite.restaurantLocation}
+                      </small>
                     </div>
-
-                    <strong>+</strong>
-
-                    <div>
-                      <span>MOVIE</span>
-                      <h3>{favorite.movieTitle}</h3>
-                      <p>
-                        ★{" "}
-                        {typeof favorite.movieRating === "number"
-                          ? favorite.movieRating.toFixed(1)
-                          : "N/A"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="favorite-actions">
-                    {favorite.restaurantURL && (
-                      <a
-                        href={favorite.restaurantURL}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Restaurant ↗
-                      </a>
-                    )}
-
-                    <a
-                      href={`https://www.themoviedb.org/movie/${favorite.movieId}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Movie ↗
-                    </a>
 
                     <button
+                      className="remove-button"
                       onClick={() =>
                         removeFavorite(favorite.id)
                       }
+                      aria-label="Remove saved pairing"
                     >
-                      Remove
+                      ×
                     </button>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           )}
-        </section>
-
-        <section className="how-section">
-          <p className="eyebrow dark">HOW IT WORKS</p>
-          <h2>Two decisions become one.</h2>
-
-          <div className="steps">
-            <div>
-              <span>01</span>
-              <h3>Choose</h3>
-              <p>
-                Enter your location and select a cuisine and movie
-                genre, or leave the filters open for a surprise.
-              </p>
-            </div>
-
-            <div>
-              <span>02</span>
-              <h3>Pair</h3>
-              <p>
-                DineSync retrieves live restaurant and movie data and
-                randomly creates your combination.
-              </p>
-            </div>
-
-            <div>
-              <span>03</span>
-              <h3>Save</h3>
-              <p>
-                Keep your favorite combinations in your personal
-                Saved Nights collection.
-              </p>
-            </div>
-          </div>
         </section>
       </main>
 
       <footer>
-        <strong>DineSync</strong>
-        <p>Built by Naureen Hossain for Code2College.</p>
+        <div className="footer-brand">
+          <strong>DineSync</strong>
+          <span>DINNER MEETS CINEMA</span>
+        </div>
 
-        <p className="tmdb-credit">
-          This product uses the TMDB API but is not endorsed or
-          certified by TMDB.
-        </p>
+        <p>Good food. Great stories. A better night. ✦</p>
+
+        <div className="footer-right">
+          <span>Built by Naureen Hossain.</span>
+          <small>
+            This product uses the TMDB API but is not endorsed or
+            certified by TMDB.
+          </small>
+        </div>
       </footer>
     </div>
   );
