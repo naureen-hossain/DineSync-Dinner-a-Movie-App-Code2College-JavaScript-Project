@@ -1,0 +1,99 @@
+.app {
+  min-height: 100vh;
+}
+
+.hero {
+  text-align: center;
+  padding: 90px 20px 65px;
+  background: linear-gradient(135deg, #171717, #302b27);
+  color: white;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: #e8b86d;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(52px, 8vw, 88px);
+  letter-spacing: -3px;
+}
+
+.tagline {
+  max-width: 550px;
+  margin: 18px auto 30px;
+  font-size: 18px;
+  color: #dedede;
+}
+
+.generate-button {
+  border: none;
+  border-radius: 30px;
+  padding: 14px 28px;
+  background: #e8b86d;
+  color: #171717;
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.generate-button:hover {
+  transform: translateY(-2px);
+}
+
+.recommendations {
+  width: min(1050px, 90%);
+  margin: 60px auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 25px;
+}
+
+.card {
+  min-height: 240px;
+  padding: 35px;
+  background: white;
+  border-radius: 22px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+}
+
+.card-label {
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #9a641d;
+}
+
+.card h2 {
+  margin: 18px 0 12px;
+  font-size: 25px;
+}
+
+.card p {
+  line-height: 1.6;
+  color: #666;
+}
+
+.plus {
+  font-size: 35px;
+  font-weight: bold;
+  color: #9a641d;
+}
+
+@media (max-width: 700px) {
+  .hero {
+    padding-top: 65px;
+  }
+
+  .recommendations {
+    grid-template-columns: 1fr;
+  }
+
+  .plus {
+    text-align: center;
+  }
+}
