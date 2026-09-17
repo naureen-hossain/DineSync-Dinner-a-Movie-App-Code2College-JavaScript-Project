@@ -86,3 +86,5 @@ DineSync is currently being developed through the four Code2College project mile
 ### DineSync
 
 **One click. One dinner. One movie. One less decision.**
+
+Live application deployed with Vercel.
