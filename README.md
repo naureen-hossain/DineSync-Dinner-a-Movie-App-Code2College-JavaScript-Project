@@ -2,10 +2,6 @@
 
 A React-based web app that pairs restaurants and movies using the Yelp and TMDB APIs, built as part of the Code2College JavaScript project series.
 
-# DineSync
-
-### Dinner & a Movie App | Code2College JavaScript Project
-
 DineSync is an interactive React web application that makes planning a dinner and movie easier. The app uses the **Yelp API** to discover restaurants and **The Movie Database (TMDB) API** to discover movies, then combines them into randomized recommendations that users can regenerate without refreshing the page.
 
 This project was developed as part of the **Code2College Internship Prep Project Series** to demonstrate JavaScript, React, API integration, user interaction, and front-end development.
